@@ -3,15 +3,16 @@
 set -e # fail on any error
 
 if [ "${#}" -lt 3 ]; then
-    echo "Usage: ${0} <app_name> <app_version> <path_to_app> [path_to_background]"
+    echo "Usage: ${0} <app_name> <app_kind> <app_version> <path_to_app> [path_to_background]"
     echo "Exemple: ${0} /path/to/MyApp.app"
     exit 1
 fi
 
 app_name="${1}"
-app_version="${2}"
-app_path="$(realpath "${3}")"
-bg_path="$(realpath "${4}" 2>/dev/null || true)"
+app_kind=${2}
+app_version="${3}"
+app_path="$(realpath "${4}")"
+bg_path="$(realpath "${5}" 2>/dev/null || true)"
 
 tmp_path="$(mktemp -d)"
 trap "rm -rf ${tmp_path}" EXIT
@@ -19,7 +20,7 @@ trap "rm -rf ${tmp_path}" EXIT
 tmp_files="tmp-${app_name}"
 tmp_dmg="tmp-${app_name}.dmg"
 
-dmg="${app_name}_GUI_${app_version}_Mac.dmg"
+dmg="${app_name}_${app_kind}_${app_version}_Mac.dmg"
 
 mkdir -p "${tmp_path}/${tmp_files}"
 

@@ -11,7 +11,7 @@ fi
 src_path="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
 app_path="$(realpath "$1")"
 app_id="$2"
-crt_name="$3"
+crt_id="$3"
 
 if [ ! -e "$app_path" ]; then
     exit 1
@@ -21,11 +21,13 @@ tmp_path="$(mktemp -d)"
 trap "rm -rf $tmp_path" EXIT
 
 sign_file() {
-    codesign --force --options runtime --timestamp --entitlements "$src_path/default.entitlements" --sign "$crt_name" "$1"
+    codesign --force --options runtime --timestamp --entitlements "$src_path/default.entitlements" --sign "Developer ID Application: $crt_id" "$1"
 }
 
-if [[ "${app_path##*.}" = "dmg" ]] ; then # sign the application dmg
-    codesign --force --options runtime --timestamp --sign "$crt_name" --identifier "$app_id" "$app_path"
+if [[ "${app_path##*.}" = "dmg" ]] ; then # sign the application package or dmg
+    codesign --force --options runtime --timestamp --sign "Developer ID Application: $crt_id" --identifier "$app_id" "$app_path"
+elif [[ "${app_path##*.}" = "pkg" ]] ; then
+    productsign --sign "Developer ID Installer: $crt_id" "$app_path" ${app_path/%.pkg/.signed.pkg}
 else # sign the application bundle
     # find binaries and libraries inside .jar files
     find "$app_path" -name "*.jar" -type f | while read -r jar ; do
@@ -66,12 +68,9 @@ else # sign the application bundle
     # signe the jre bundle
     sign_file "$app_path/Contents/runtime"
 
-    # sign bundled cli
-    sign_file "$app_path/Contents/Helpers/embarc-cli"
-
     # sign main binary
     sign_file "$app_path/Contents/MacOS/embARC"
 
     # sign the whole application
-    codesign --force --options runtime --timestamp --sign "$crt_name"  --entitlements "$src_path/default.entitlements" --identifier "$app_id" "$app_path"
+    codesign --force --options runtime --timestamp --sign "Developer ID Application: $crt_id"  --entitlements "$src_path/default.entitlements" --identifier "$app_id" "$app_path"
 fi
