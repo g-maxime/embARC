@@ -24,7 +24,7 @@ popd
 #-----------------------------------------------------------------------
 # Build
 pushd "${release_directory}/.."
-    sed -i' ' 's/com.portalmedia.embarc.gui.Launcher/com.portalmedia.embarc.cli.Main/g' build.gradle
+    sed -i.bak 's/com.portalmedia.embarc.gui.Launcher/com.portalmedia.embarc.cli.Main/g' build.gradle
     ./gradlew build
 popd
 

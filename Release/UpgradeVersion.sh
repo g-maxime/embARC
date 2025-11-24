@@ -28,16 +28,16 @@ files_dot=(
 )
 
 for file in "${files_dot[@]}"; do
-   sed -i' ' "s/${version_old}/${version}/g" "${file}"
+   sed -i.bak "s/${version_old}/${version}/g" "${file}"
 done
 
 #-----------------------------------------------------------------------
 # Processing installer's VERSION4
-sed -i' ' "s/${version_old}/${version}/g" "${release_directory}/../Project/Install/embARC.nsi"
+sed -i.bak "s/${version_old}/${version}/g" "${release_directory}/../Project/Install/embARC.nsi"
 if [ "$(echo $version | cut -d. -f4)" != "" ] ; then
-    sed -i' ' "s/!define PRODUCT_VERSION4 \"\${PRODUCT_VERSION}[0-9.]*\"/!define PRODUCT_VERSION4 \"\${PRODUCT_VERSION}\"/g" "${release_directory}/../Project/Install/embARC.nsi"
+    sed -i.bak "s/!define PRODUCT_VERSION4 \"\${PRODUCT_VERSION}[0-9.]*\"/!define PRODUCT_VERSION4 \"\${PRODUCT_VERSION}\"/g" "${release_directory}/../Project/Install/embARC.nsi"
 elif [ "$(echo $version | cut -d. -f3)" != "" ] ; then
-    sed -i' ' "s/!define PRODUCT_VERSION4 \"\${PRODUCT_VERSION}[0-9.]*\"/!define PRODUCT_VERSION4 \"\${PRODUCT_VERSION}.0\"/g" "${release_directory}/../Project/Install/embARC.nsi"
+    sed -i.bak "s/!define PRODUCT_VERSION4 \"\${PRODUCT_VERSION}[0-9.]*\"/!define PRODUCT_VERSION4 \"\${PRODUCT_VERSION}.0\"/g" "${release_directory}/../Project/Install/embARC.nsi"
 else
-    sed -i' ' "s/!define PRODUCT_VERSION4 \"\${PRODUCT_VERSION}[0-9.]*\"/!define PRODUCT_VERSION4 \"\${PRODUCT_VERSION}.0.0\"/g" "${release_directory}/../Project/Install/embARC.nsi"
+    sed -i.bak "s/!define PRODUCT_VERSION4 \"\${PRODUCT_VERSION}[0-9.]*\"/!define PRODUCT_VERSION4 \"\${PRODUCT_VERSION}.0.0\"/g" "${release_directory}/../Project/Install/embARC.nsi"
 fi
