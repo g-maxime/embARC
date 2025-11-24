@@ -1,0 +1,32 @@
+name: Checks
+
+on: [push, pull_request]
+
+jobs:
+
+  Job:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'corretto'
+          java-version: '21'
+      - name: embARC-maj
+        run: |
+          git clone --depth=1 https://github.com/PortalMedia/embARC-maj.git
+      - name: Compile
+        run: |
+          sed -i.bak 's/com.portalmedia.embarc.gui.Launcher/com.portalmedia.embarc.cli.Main/g' build.gradle
+          ./gradlew build
+      - name: Check
+        run: |
+          ls build/libs/embARC-$(<Project/version.txt)-all.jar
+          java -jar build/libs/embARC-$(<Project/version.txt)-all.jar
