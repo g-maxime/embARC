@@ -329,7 +329,7 @@ public class Main {
 								Files.delete(tempFile);
 							}
 						} catch (final Exception ex) {
-							System.out.println("Error deleting temp file for dpx file: " + dpxFile.getPath());
+							System.out.println("Error deleting rejected temp file for dpx file: " + dpxFile.getPath());
 						}
 					}
 				} catch (Exception e) {
