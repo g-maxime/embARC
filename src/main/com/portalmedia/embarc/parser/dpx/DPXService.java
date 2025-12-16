@@ -171,8 +171,7 @@ public class DPXService {
 				}
 			}	
 		} catch (final Exception ex) {
-			// Cleanup on error
-			fos.close();
+			// Cleanup on error;
 			final Path tempFile = new File(tempPath).toPath();
 			if (Files.exists(tempFile)) {
 				Files.delete(tempFile);
