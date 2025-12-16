@@ -52,14 +52,6 @@ Push-Location (Split-Path $release_directory -Parent)
     # Remove ReadOnly flag from the generated executable
     $executable = Get-Item 'build\distributions\windows\embARC\embARC.exe'
     $executable.Attributes -= 'ReadOnly'
-
-    & signtool sign `
-             /fd sha256 `
-             /tr http://timestamp.acs.microsoft.com `
-             /td sha256 `
-             /d embARC `
-             /du http://mediaarea.net `
-             build\distributions\windows\embARC\embARC.exe
 Pop-Location
 
 #-----------------------------------------------------------------------
@@ -72,12 +64,4 @@ Pop-Location
 # Package installer
 Push-Location (Join-Path (Split-Path $release_directory -Parent) '\Project\Install')
     & makensis.exe embARC.nsi
-
-    & signtool sign `
-             /fd sha256 `
-             /tr http://timestamp.acs.microsoft.com `
-             /td sha256 `
-             /d embARC `
-             /du http://mediaarea.net `
-             ..\..\Release\embARC_GUI_${version}_Windows_x64.exe
 Pop-Location
